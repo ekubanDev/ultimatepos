@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# update OS
+sudo dnf update -y
+
+# Install Apapche WebServer
+
+dnf install -y httpd wget
+systemctl start httpd
+systemctl enable httpd
+
+# IMDSv2 token processing
+TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+IP_ADDR=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -v
+ http://169.254.169.254/latest/meta-data/public-ipv4)
+
+ # Write to web server files
+echo "Manual instance with IP $IP_ADDR" > /var/www/html/index.html echo "ok" > /var/www/html/health.html
+# Install pip and zip
+dnf -y install python3-pip zip
+# Install DDB local
+dnf install -y java-17-amazon-corretto-devel.x86_64

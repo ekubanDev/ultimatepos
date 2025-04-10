@@ -1,0 +1,33 @@
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: ultimtepos
+      DB_PASSWORD: bubbleCro
+      DB_USERNAME: root
+
+  db:
+    image: mysql:8.0
+    platform: linux/arm64/v8
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ultimatepos
+      MYSQL_USER: ultimatepos
+      MYSQL_PASSWORD: ultimatepos
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+
+volumes:
+  mysql_data:
